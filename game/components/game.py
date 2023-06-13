@@ -3,6 +3,7 @@ import pygame
 from game.utils.constants import BG, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, DEFAULT_TYPE
 from game.components.spaceship import Spaceship
 
+
 class Game:
     def __init__(self):
         pygame.init()
@@ -16,9 +17,7 @@ class Game:
         self.y_pos_bg = 0
         self.player = Spaceship()
 
-
     def run(self):
-        # Game loop: events - update - draw
         self.playing = True
         while self.playing:
             self.events()
@@ -42,7 +41,6 @@ class Game:
         self.draw_background()
         self.player.draw(self.screen)
         pygame.display.update()
-        #pygame.display.flip()
 
     def draw_background(self):
         image = pygame.transform.scale(BG, (SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -52,6 +50,5 @@ class Game:
         if self.y_pos_bg >= SCREEN_HEIGHT:
             self.screen.blit(image, (self.x_pos_bg, self.y_pos_bg - image_height))
             self.y_pos_bg = 0
-            
-        self.y_pos_bg += self.game_speed
 
+        self.y_pos_bg += self.game_speed
