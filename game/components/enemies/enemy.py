@@ -12,8 +12,8 @@ class Enemy(Sprite):
     SPEED_X = 5
     MOV_X = {0: 'left', 1: 'right'}
 
-    def __init__(self):
-        self.image = ENEMY_1
+    def __init__(self,image):
+        self.image = image
         self.image = pygame.transform.scale(self.image,(self.SHIP_WIDTH, self.SHIP_HEIGHT))
         self.rect = self.image.get_rect()
         self.rect.y = self.Y_POS
