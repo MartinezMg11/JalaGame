@@ -10,6 +10,7 @@ class EnemyManager:
         self.add_enemy()
         for enemy in self.enemies:
             enemy.update(self.enemies, game)
+        
 
     def draw (self, screen):
         for enemy in self.enemies:
