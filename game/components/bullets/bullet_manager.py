@@ -1,6 +1,6 @@
 import pygame
 
-from game.utils.constants import EXPLOSION_SONIDO
+from game.utils.constants import EXPLOSION_1, EXPLOSION_10, EXPLOSION_11, EXPLOSION_12, EXPLOSION_2, EXPLOSION_3, EXPLOSION_4, EXPLOSION_5, EXPLOSION_6, EXPLOSION_7, EXPLOSION_8, EXPLOSION_9, EXPLOSION_SONIDO
 
 
 class BulletManager:
@@ -14,18 +14,37 @@ class BulletManager:
             bullet.update(self.enemy_bullets)
 
             if bullet.rect.colliderect(game.player.rect) and bullet.owner == 'enemy':
-                self.enemy_bullets.remove(bullet)
-                game.playing = False
+                game.death_count += 1
+                game.lives_count += 1
+                game.subtract_lives()
                 pygame.time.delay(1000)
+                self.enemy_bullets.remove(bullet)
+                if game.lives < 1:
+                    game.playing = False
                 break
 
             if len (game.enemy_manager.enemies) > 0:
                 if bullet.rect.colliderect(game.enemy_manager.enemies[0].rect) and bullet.owner == 'player':
-                    game.enemy_manager.enemies = []
                     EXPLOSION_SONIDO.play()
+                    game.score += 100
+                    game.score_total += 100
+                    self.explosion(game,game.enemy_manager.enemies[0])
+                    game.enemy_manager.enemies = []
+
                     
         for bullet in self.player_bullets:
             bullet.update(self.player_bullets)
+
+    def explosion(self, game, enemigo):
+        x = enemigo.rect.x + (enemigo.rect.width - EXPLOSION_1.get_width()) // 2
+        y = enemigo.rect.y + (enemigo.rect.height - EXPLOSION_1.get_height()) // 2
+
+        imagenes_explosion = [EXPLOSION_1, EXPLOSION_2, EXPLOSION_3, EXPLOSION_4, EXPLOSION_5, EXPLOSION_6, EXPLOSION_7, EXPLOSION_8, EXPLOSION_9, EXPLOSION_10, EXPLOSION_11, EXPLOSION_12]
+
+        for i, imagen_explosion in enumerate(imagenes_explosion):
+            game.screen.blit(imagen_explosion, (x, y-10))  # Dibuja la imagen de explosión en la pantalla en la posición adecuada
+
+            pygame.display.flip()  # Actualiza la pantalla
 
 
 
@@ -40,3 +59,7 @@ class BulletManager:
             self.enemy_bullets.append(bullet)
         if bullet.owner == 'player' and len (self.player_bullets)<1:
             self.enemy_bullets.append(bullet)
+
+    def reset(self):
+        self.bullets = []
+        self.enemy_bullets = []
