@@ -2,8 +2,9 @@ import pygame
 from game.components.bullets.bullet_manager import BulletManager
 from game.components.enemies.enemy_manager import EnemyManager
 from game.components.menu import Menu
+from game.components.power_ups.power_up_manager import PowerUpManager
 
-from game.utils.constants import BG, FONT_GAME,GAME_OVER, HEART, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, DEFAULT_TYPE
+from game.utils.constants import BG, FONT_GAME,GAME_OVER, HEART, HEART_TYPE, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, SHIELD_TYPE, TITLE, FPS, DEFAULT_TYPE
 from game.components.spaceship import Spaceship
 
 class Game:
@@ -23,10 +24,10 @@ class Game:
         self.player = Spaceship()
         self.enemy_manager = EnemyManager()
         self.bullet_manager = BulletManager()
+        self.power_up_manager = PowerUpManager()
         self.death_count = 0
         self.score = 0
         self.score_total = 0
-        self.lives = 3
         self.lives_count = 0
         self.menu = Menu('Press Any key to start...',self.screen)
 
@@ -61,6 +62,7 @@ class Game:
         self.player.update(user_input,self)
         self.enemy_manager.update(self)
         self.bullet_manager.update(self)
+        self.power_up_manager.update(self)
 
 
 
@@ -71,8 +73,10 @@ class Game:
         self.player.draw(self.screen)
         self.enemy_manager.draw(self.screen)
         self.bullet_manager.draw(self.screen)
+        self.power_up_manager.draw(self.screen)
         self.draw_score()
-        self.draw_lives()
+        self.draw_power_up_time()
+        self.player.draw_lives(self.screen)
         pygame.display.update()
         #pygame.display.flip()
 
@@ -95,7 +99,7 @@ class Game:
 
         if self.death_count > 0:
             self.menu.update_message(f'Vidas Perdidas:{self.lives_count}  Score Total:{self.score_total}')
-            self.lives_restart()
+            self.player.lives_restart()
 
         icon = pygame.transform.scale(ICON,(80,120))
         self.screen.blit(icon,(half_screen_width - 50,half_screen_height - 150))
@@ -111,38 +115,25 @@ class Game:
         text_rect.center = (1000,20)
         self.screen.blit(text,text_rect)
 
-    def subtract_lives(self):
-        if self.lives > 0:
-            self.lives -= 1
-        font = pygame.font.Font(FONT_GAME, 20)
-        text = font.render(f"Vidas Restantes: {self.lives}", True, (255, 255, 255))
-        text_rect = text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+    def draw_power_up_time(self):
+        if self.player.has_power_up and self.player.power_up_type == SHIELD_TYPE:
+            time_to_show = round((self.player.power_time_up - pygame.time.get_ticks())/1000, 2)
+
+            if time_to_show >=0:
+                font = pygame.font.Font(FONT_GAME, 15)
+                text = font.render(f'{self.player.power_up_type.capitalize()} is enable for {time_to_show} seconds', True, (255,255,255))
+                text_rect = text.get_rect()
+                self.screen.blit(text,(540, 50))
+            else:
+                self.player_has_power_up = False
+                self.player.power_up_type = DEFAULT_TYPE
+                self.player.set_image()
         
-        if self.lives >= 1:
-            self.screen.blit(text, text_rect)
-        else:
-            self.screen.blit(GAME_OVER, text_rect)
-
-        pygame.display.update()
-        pygame.time.delay(1000)
-
-
-    def draw_lives(self):
-        heart_rect1 = HEART.get_rect()
-        heart_rect1.center = (1080, 580)
-        heart_rect2 = HEART.get_rect()
-        heart_rect2.center = (1050, 580)
-        heart_rect3 = HEART.get_rect()
-        heart_rect3.center = (1020, 580)
-        self.screen.blit(HEART, heart_rect1)
-
-        if self.lives >= 2:
-            self.screen.blit(HEART, heart_rect2)
-
-        if self.lives == 3:
-            self.screen.blit(HEART, heart_rect3)
-
-        pygame.display.update()
-
-    def lives_restart(self):
-        self.lives = 3
+        if self.player.has_power_up and self.player.power_up_type == HEART_TYPE:
+            self.player.lives = self.player.lives + 1
+            heart_rect4 = HEART.get_rect()
+            heart_rect4.center = (950, 580)
+            self.screen.blit(HEART, heart_rect4)
+            self.player_has_power_up = False
+            self.player.power_up_type = DEFAULT_TYPE
+            self.player.set_image()

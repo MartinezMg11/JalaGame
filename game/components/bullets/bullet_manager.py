@@ -1,6 +1,6 @@
 import pygame
 
-from game.utils.constants import EXPLOSION_1, EXPLOSION_10, EXPLOSION_11, EXPLOSION_12, EXPLOSION_2, EXPLOSION_3, EXPLOSION_4, EXPLOSION_5, EXPLOSION_6, EXPLOSION_7, EXPLOSION_8, EXPLOSION_9, EXPLOSION_SONIDO
+from game.utils.constants import EXPLOSION_1, EXPLOSION_10, EXPLOSION_11, EXPLOSION_12, EXPLOSION_2, EXPLOSION_3, EXPLOSION_4, EXPLOSION_5, EXPLOSION_6, EXPLOSION_7, EXPLOSION_8, EXPLOSION_9, EXPLOSION_SONIDO, SHIELD_TYPE
 
 
 class BulletManager:
@@ -14,14 +14,16 @@ class BulletManager:
             bullet.update(self.enemy_bullets)
 
             if bullet.rect.colliderect(game.player.rect) and bullet.owner == 'enemy':
-                game.death_count += 1
-                game.lives_count += 1
-                game.subtract_lives()
-                pygame.time.delay(1000)
+                if game.player.power_up_type != SHIELD_TYPE:
+                    game.death_count += 1
+                    game.lives_count += 1
+                    game.player.subtract_lives(game.screen)
+                    pygame.time.delay(1000)
+                    if game.player.lives < 1:
+                        game.playing = False
+                    break
+
                 self.enemy_bullets.remove(bullet)
-                if game.lives < 1:
-                    game.playing = False
-                break
 
             if len (game.enemy_manager.enemies) > 0:
                 if bullet.rect.colliderect(game.enemy_manager.enemies[0].rect) and bullet.owner == 'player':
@@ -42,9 +44,10 @@ class BulletManager:
         imagenes_explosion = [EXPLOSION_1, EXPLOSION_2, EXPLOSION_3, EXPLOSION_4, EXPLOSION_5, EXPLOSION_6, EXPLOSION_7, EXPLOSION_8, EXPLOSION_9, EXPLOSION_10, EXPLOSION_11, EXPLOSION_12]
 
         for i, imagen_explosion in enumerate(imagenes_explosion):
-            game.screen.blit(imagen_explosion, (x, y-10))  # Dibuja la imagen de explosión en la pantalla en la posición adecuada
+            game.screen.blit(imagen_explosion, (x, y-10))
 
-            pygame.display.flip()  # Actualiza la pantalla
+            pygame.display.flip()
+            """ pygame.time.wait(1000)"""
 
 
 
