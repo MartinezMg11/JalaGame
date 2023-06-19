@@ -18,6 +18,7 @@ class BulletManager:
                     game.death_count += 1
                     game.lives_count += 1
                     game.player.subtract_lives(game.screen)
+                    self.enemy_bullets.remove(bullet)
                     pygame.time.delay(1000)
                     if game.player.lives < 1:
                         game.playing = False
@@ -26,14 +27,14 @@ class BulletManager:
                 self.enemy_bullets.remove(bullet)
 
             if len (game.enemy_manager.enemies) > 0:
-                if bullet.rect.colliderect(game.enemy_manager.enemies[0].rect) and bullet.owner == 'player':
-                    EXPLOSION_SONIDO.play()
-                    game.score += 100
-                    game.score_total += 100
-                    self.explosion(game,game.enemy_manager.enemies[0])
-                    game.enemy_manager.enemies = []
+                for i in range(0,2):
+                    if len (game.enemy_manager.enemies) > i and bullet.rect.colliderect(game.enemy_manager.enemies[i].rect) and bullet.owner == 'player':
+                        EXPLOSION_SONIDO.play()
+                        game.score += 100
+                        self.explosion(game,game.enemy_manager.enemies[i])
+                        game.enemy_manager.enemies.remove(game.enemy_manager.enemies[i].rect)
 
-                    
+
         for bullet in self.player_bullets:
             bullet.update(self.player_bullets)
 
@@ -47,7 +48,6 @@ class BulletManager:
             game.screen.blit(imagen_explosion, (x, y-10))
 
             pygame.display.flip()
-            """ pygame.time.wait(1000)"""
 
 
 
@@ -58,11 +58,13 @@ class BulletManager:
             bullet.draw(screen)
 
     def add_bullet(self, bullet):
-        if bullet.owner == 'enemy' and len (self.enemy_bullets)<1:
+        if bullet.owner == "enemy":
+                self.enemy_bullets.append(bullet)
+        elif bullet.owner == "player":
             self.enemy_bullets.append(bullet)
-        if bullet.owner == 'player' and len (self.player_bullets)<1:
-            self.enemy_bullets.append(bullet)
+
 
     def reset(self):
         self.bullets = []
+        self.player_bullets = []
         self.enemy_bullets = []

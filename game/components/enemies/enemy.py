@@ -26,7 +26,9 @@ class Enemy(Sprite):
         self.move_x_for = random.randint(move_x_for[0], move_x_for[1])
         self.index = 0
         self.type = 'enemy'
-        self.shooting_time = random.randint(10, 20)
+        self.shooting_time = pygame.time.get_ticks()+500
+        self.shoot_num = 0
+
 
     def update(self, ships, game):
         self.rect.y += self.speed_y
@@ -56,7 +58,9 @@ class Enemy(Sprite):
     
     def shoot(self, bullet_Manager):
         current_time = pygame.time.get_ticks()
-        if self.shooting_time <= current_time:
+        round_time = round((self.shooting_time - pygame.time.get_ticks())/1000)
+        if round_time <= 0:
             bullet = Bullet(self)
             bullet_Manager.add_bullet(bullet)
-            self.shooting_time += random.randint(10, 20)
+            self.shoot_num += 1
+            self.shooting_time = pygame.time.get_ticks()+2000

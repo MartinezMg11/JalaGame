@@ -27,7 +27,7 @@ class Spaceship(Sprite):
 
 
     def update(self, user_input,game):
-        self.shoot(game.bullet_manager,user_input)
+        self.shoot(game.bullet_manager,user_input,game)
         if user_input[pygame.K_LEFT]:
             self.move_left()
         elif user_input[pygame.K_RIGHT]:
@@ -59,7 +59,7 @@ class Spaceship(Sprite):
     def draw(self, screen):
         screen.blit(self.image, (self.rect.x, self.rect.y))
 
-    def shoot(self, bullet_Manager,user_input):
+    def shoot(self, bullet_Manager,user_input,game):
         if user_input[pygame.K_SPACE]:
                 LASER_SONIDO.play()
                 bullet = Bullet(self)
@@ -88,35 +88,12 @@ class Spaceship(Sprite):
         self.lives = 3
 
     def draw_lives(self,screen):
-        heart_list =[1080,1050,1020,990,960,930,900,870,840,810,780,750]
+        heart_list =[1070,1040,1010,980,950,920,890,860,830,800,770,740]
 
         heart_rect = HEART.get_rect()
-        heart_rect.center = (heart_list[0], 580)
-        screen.blit(HEART, heart_rect.center)
 
-        if self.lives >= 2:
-            heart_rect.center = (heart_list[1], 580)
-            screen.blit(HEART, heart_rect.center)
-        if self.lives >= 3:
-            heart_rect.center = (heart_list[2], 580)
-            screen.blit(HEART, heart_rect.center)
-        if self.lives >= 4:
-            heart_rect.center = (heart_list[3], 580)
-            screen.blit(HEART, heart_rect.center)
-        if self.lives >= 5:
-            heart_rect.center = (heart_list[4], 580)
-            screen.blit(HEART, heart_rect.center)
-        if self.lives >= 6:
-            heart_rect.center = (heart_list[5], 580)
-            screen.blit(HEART, heart_rect.center)
-        if self.lives >= 7:
-           heart_rect.center = (heart_list[6], 580)
-           screen.blit(HEART, heart_rect.center)
-        if self.lives >= 8:
-           heart_rect.center = (heart_list[7], 580)
-           screen.blit(HEART, heart_rect.center)
-        if self.lives >= 9:
-           heart_rect.center = (heart_list[8], 580)
-           screen.blit(HEART, heart_rect.center)
-
-        pygame.display.update()
+        for i in range(1,10): 
+            if self.lives >= i:
+                heart_rect.center = (heart_list[i-1], 560)
+                screen.blit(HEART, heart_rect.center)
+            pygame.display.update()

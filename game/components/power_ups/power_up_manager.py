@@ -7,7 +7,7 @@ import pygame
 from game.components.power_ups.heart import Heart
 from game.components.power_ups.shield import Shield
 
-from game.utils.constants import SPACESHIP_SHIELD
+from game.utils.constants import SHIELD_TYPE, SPACESHIP_SHIELD
 
 
 class PowerUpManager:
@@ -30,8 +30,12 @@ class PowerUpManager:
                 game.player.power_up_type = power_up.type
                 game.player.has_power_up = True
                 game.player.power_time_up = power_up.start_time + (self.duration * 1000)
-                game.player.set_image((65, 75), SPACESHIP_SHIELD)
-                self.power_ups.remove(power_up)
+                if game.player.power_up_type == SHIELD_TYPE:
+                    game.player.set_image((65, 75), SPACESHIP_SHIELD)
+                    self.power_ups.remove(power_up)
+                else:
+                    game.player.set_image((65, 75))
+                    self.power_ups.remove(power_up)
 
     def draw(self, screen):
         for power_up in self.power_ups:

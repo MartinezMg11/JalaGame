@@ -46,6 +46,7 @@ EXPLOSION_11 = pygame.image.load(os.path.join(IMG_DIR, "Explosion/10.png"))
 EXPLOSION_12 = pygame.image.load(os.path.join(IMG_DIR, "Explosion/10.png"))
 
 FONT_GAME = os.path.join(IMG_DIR,'Other/AtariClassicChunky-PxXP.ttf')
+FONT_TITLE = os.path.join(IMG_DIR,'Other/MinecraftEvenings-RBao.ttf')
 FONT_STYLE = 'freesansbold.ttf'
 
 LASER_SONIDO = pygame.mixer.Sound(os.path.join(IMG_DIR,'Sounds/laser.wav'))

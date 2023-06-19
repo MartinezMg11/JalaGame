@@ -4,7 +4,7 @@ from game.components.enemies.enemy_manager import EnemyManager
 from game.components.menu import Menu
 from game.components.power_ups.power_up_manager import PowerUpManager
 
-from game.utils.constants import BG, FONT_GAME,GAME_OVER, HEART, HEART_TYPE, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, SHIELD_TYPE, TITLE, FPS, DEFAULT_TYPE
+from game.utils.constants import BG, ENEMY_1, ENEMY_2, FONT_GAME,GAME_OVER, HEART, HEART_TYPE, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, SHIELD_TYPE, TITLE, FPS, DEFAULT_TYPE
 from game.components.spaceship import Spaceship
 
 class Game:
@@ -98,15 +98,18 @@ class Game:
         self.menu.reset_screen_color(self.screen)
 
         if self.death_count > 0:
-            self.menu.update_message(f'Vidas Perdidas:{self.lives_count}  Score Total:{self.score_total}')
+            if self.score > self.score_total:
+                self.menu.update_message(f'Vidas Perdidas: {self.lives_count}',f'Score: {self.score}',f'High Score: {self.score}')
+                self.score_total = self.score
+            else:
+                self.menu.update_message(f'Vidas Perdidas: {self.lives_count}',f'Score: {self.score}',f'High Score: {self.score_total}')
             self.player.lives_restart()
-
-        icon = pygame.transform.scale(ICON,(80,120))
-        self.screen.blit(icon,(half_screen_width - 50,half_screen_height - 150))
-        self.menu.draw(self.screen)
-        self.menu.update(self)
-
-
+            self.menu.draw(self.screen)
+            self.menu.update(self)
+        else:
+            self.menu.draw(self.screen)
+            self.menu.draw_icons(self.screen)
+            self.menu.update(self)
 
     def draw_score(self):
         font = pygame.font.Font(FONT_GAME,15)
