@@ -22,6 +22,7 @@ class Spaceship(Sprite):
         self.has_power_up = False
         self.power_time_up = 0
         self.lives = 3
+
         
 
 

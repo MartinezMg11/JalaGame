@@ -49,6 +49,8 @@ FONT_GAME = os.path.join(IMG_DIR,'Other/AtariClassicChunky-PxXP.ttf')
 FONT_TITLE = os.path.join(IMG_DIR,'Other/MinecraftEvenings-RBao.ttf')
 FONT_STYLE = 'freesansbold.ttf'
 
+SOUND_PRINCIPAL =pygame.mixer.Sound(os.path.join(IMG_DIR,'Sounds/Intergalactic Odyssey.ogg'))
 LASER_SONIDO = pygame.mixer.Sound(os.path.join(IMG_DIR,'Sounds/laser.wav'))
 EXPLOSION_SONIDO = pygame.mixer.Sound(os.path.join(IMG_DIR,'Sounds/explosion.wav'))
 
+SOUND_PRINCIPAL.set_volume(0.2)

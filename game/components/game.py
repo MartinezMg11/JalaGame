@@ -4,7 +4,7 @@ from game.components.enemies.enemy_manager import EnemyManager
 from game.components.menu import Menu
 from game.components.power_ups.power_up_manager import PowerUpManager
 
-from game.utils.constants import BG, ENEMY_1, ENEMY_2, FONT_GAME,GAME_OVER, HEART, HEART_TYPE, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, SHIELD_TYPE, TITLE, FPS, DEFAULT_TYPE
+from game.utils.constants import BG, ENEMY_1, ENEMY_2, FONT_GAME,GAME_OVER, HEART, HEART_TYPE, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, SHIELD_TYPE, SOUND_PRINCIPAL, TITLE, FPS, DEFAULT_TYPE
 from game.components.spaceship import Spaceship
 
 class Game:
@@ -27,7 +27,7 @@ class Game:
         self.power_up_manager = PowerUpManager()
         self.death_count = 0
         self.score = 0
-        self.score_total = 0
+        self.score_hight = 0
         self.lives_count = 0
         self.menu = Menu('Press Any key to start...',self.screen)
 
@@ -41,6 +41,8 @@ class Game:
         pygame.quit()
 
     def run(self):
+        SOUND_PRINCIPAL.play()
+
         # Game loop: events - update - draw
         self.score = 0
         self.bullet_manager.reset() #implementar
@@ -98,11 +100,11 @@ class Game:
         self.menu.reset_screen_color(self.screen)
 
         if self.death_count > 0:
-            if self.score > self.score_total:
+            if self.score > self.score_hight:
                 self.menu.update_message(f'Vidas Perdidas: {self.lives_count}',f'Score: {self.score}',f'High Score: {self.score}')
-                self.score_total = self.score
+                self.score_hight = self.score
             else:
-                self.menu.update_message(f'Vidas Perdidas: {self.lives_count}',f'Score: {self.score}',f'High Score: {self.score_total}')
+                self.menu.update_message(f'Vidas Perdidas: {self.lives_count}',f'Score: {self.score}',f'High Score: {self.score_hight}')
             self.player.lives_restart()
             self.menu.draw(self.screen)
             self.menu.update(self)
